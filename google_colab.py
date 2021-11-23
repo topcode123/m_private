@@ -19,7 +19,11 @@ import time
 import random
 from newspaper import Config,Article
 from urllib.parse import urlparse
-
+from requests import get
+from pymongo import MongoClient
+import time
+colabstatus  = MongoClient(CONNECTION_STRING_MGA1).colabstatus.data
+filename = get('http://172.28.0.2:9000/api/sessions').json()[0]['name']
 def replace_attr(soup, from_attr: str, to_attr: str):
     if from_attr in str(soup):
         soup[to_attr] = soup[from_attr]
@@ -30,7 +34,7 @@ def replace_attr(soup, from_attr: str, to_attr: str):
         return soup
 
 client1 = get_database()
-
+lasttime=0
 userAgents=['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36','Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1']
 cl = client1.queuekeywords.data
 url = client1.url_test.data
@@ -41,7 +45,9 @@ headers = {
 with cl.watch()  as stream:
 
   while stream.alive:
-
+    if time.time() - lasttime>100:
+      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
+      lasttime = time.time()
     cancle = False
     if cl.count_documents({})>0:
       try:

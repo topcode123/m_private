@@ -201,31 +201,58 @@ def process_content(article,url):
                 thep.append(i)
 
         if len(url["campaign"]["Top10url"])>0:
-            if internal_link and internal_link_title:
-                internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
-                internal_link_p_tag1 = BeautifulSoup(internal_link_p_tag1,"html.parser")
+            if url["campaign"]["language"] == "vi":
+                if internal_link and internal_link_title:
+                    internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
+                    internal_link_p_tag1 = BeautifulSoup(internal_link_p_tag1,"html.parser")
+                    try:
+                        thep[int(len(thep)/2)].append(internal_link_p_tag1)
+                    except:
+                        pass
+
+
+                self_link_p_tag =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Bạn đang đọc: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/'+self_url,article.title,article.title)
+                if internal_link2 and internal_link_title2:
+                    internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
+                    internal_link_p_tag2 = BeautifulSoup(internal_link_p_tag2,"html.parser")
+                    try:
+                        thep[len(thep)-4].append(internal_link_p_tag2)
+                    except:
+                        pass
+
+
+
+                self_link_p_tag = BeautifulSoup(self_link_p_tag,"html.parser")
                 try:
-                    thep[int(len(thep)/2)].append(internal_link_p_tag1)
+                    thep[min(len(thep),3)].append(self_link_p_tag)
                 except:
                     pass
+            else:
+                if internal_link and internal_link_title:
+                    internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
+                    internal_link_p_tag1 = BeautifulSoup(internal_link_p_tag1,"html.parser")
+                    try:
+                        thep[int(len(thep)/2)].append(internal_link_p_tag1)
+                    except:
+                        pass
 
 
-            self_link_p_tag =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Bạn đang đọc: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/'+self_url,article.title,article.title)
-            if internal_link2 and internal_link_title2:
-                internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
-                internal_link_p_tag2 = BeautifulSoup(internal_link_p_tag2,"html.parser")
+                self_link_p_tag =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Reading: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/'+self_url,article.title,article.title)
+                if internal_link2 and internal_link_title2:
+                    internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
+                    internal_link_p_tag2 = BeautifulSoup(internal_link_p_tag2,"html.parser")
+                    try:
+                        thep[len(thep)-4].append(internal_link_p_tag2)
+                    except:
+                        pass
+
+
+
+                self_link_p_tag = BeautifulSoup(self_link_p_tag,"html.parser")
                 try:
-                    thep[len(thep)-4].append(internal_link_p_tag2)
+                    thep[min(len(thep),3)].append(self_link_p_tag)
                 except:
                     pass
-
-
-
-            self_link_p_tag = BeautifulSoup(self_link_p_tag,"html.parser")
-            try:
-                thep[min(len(thep),3)].append(self_link_p_tag)
-            except:
-                pass
 
 
         if cate_link and cate_name:

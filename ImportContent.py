@@ -333,7 +333,7 @@ def restImgUL(website,user,password,urlimg,src_img):
 
                     with requests.post(website,
                         data=image,
-                        headers=headers,timeout=10) as response:
+                        headers=headers,timeout=10,verify=False) as response:
                             res = response.json(encoding="utf-8")
                             newID= res.get('id')
                             return newID
@@ -368,7 +368,7 @@ def importcontent(content):
         'slug': content['slug'] 
     }
 
-    with requests.post(website , headers=header,json = post) as response:
+    with requests.post(website , headers=header,json = post,verify=False) as response:
         res = response.status_code
     if res!=None:
         print(res)

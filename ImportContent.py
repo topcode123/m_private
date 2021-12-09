@@ -56,6 +56,7 @@ def process_content(article,url):
         self_url = unidecode(url["keyword"]["Keyword"])+ ' ' + str(time.time()).split(".")[0]
         self_url = self_url.replace(" ","-")
         self_url = self_url.replace(".","")
+        self_url = self_url.replace("\n","")
         domain = urlparse(url["link"]).netloc
         img = soup.find_all("img")
         src_img = []

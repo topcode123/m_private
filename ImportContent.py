@@ -55,8 +55,8 @@ def process_content(article,url):
         soup = BeautifulSoup(article.article_html, 'html.parser')
         print(url["keyword"]["Keyword"])
         print(unidecode(url["keyword"]["Keyword"]))
-        print(unidecode(url["keyword"]["Keyword"]) + "ok")
-        self_url = unidecode(url["keyword"]["Keyword"])+ ' ' + str(time.time()).split(".")[0]
+        print(str(unidecode(url["keyword"]["Keyword"])) + "ok")
+        self_url = str(unidecode(url["keyword"]["Keyword"]))+ ' ' + str(time.time()).split(".")[0]
         self_url = self_url.replace(" ","-")
         self_url = self_url.replace(".","")
         self_url = self_url.replace("\n","")

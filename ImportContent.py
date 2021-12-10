@@ -53,10 +53,12 @@ def process_content(article,url):
 
     # # article.article_html = tostring(article.top_node,encoding="unicode")
         soup = BeautifulSoup(article.article_html, 'html.parser')
+        print(url["keyword"]["Keyword"])
         self_url = unidecode(url["keyword"]["Keyword"])+ ' ' + str(time.time()).split(".")[0]
         self_url = self_url.replace(" ","-")
         self_url = self_url.replace(".","")
         self_url = self_url.replace("\n","")
+        print(self_url)
         domain = urlparse(url["link"]).netloc
         img = soup.find_all("img")
         src_img = []

@@ -73,13 +73,9 @@ def process_content(article,url):
 
     # # article.article_html = tostring(article.top_node,encoding="unicode")
         soup = BeautifulSoup(article.article_html, 'html.parser')
-        print(type(url["keyword"]["Keyword"]))
-        print(url["keyword"]["Keyword"] + "ok")
-        print(no_accent_vietnamese(url["keyword"]["Keyword"]))
-        a= no_accent_vietnamese(url["keyword"]["Keyword"]) + "ok"
-        print(str(a))
-        self_url = str(no_accent_vietnamese(url["keyword"]["Keyword"]))+ ' ' + str(time.time()).split(".")[0]
+        self_url = str(no_accent_vietnamese(url["keyword"]["Keyword"].replace("\r","")))+ ' ' + str(time.time()).split(".")[0]
         self_url = self_url.replace(" ","-")
+        self_url = self_url.replace("--","-")
         self_url = self_url.replace(".","")
 
         self_url = self_url.replace("\n","")

@@ -29,6 +29,26 @@ from unidecode import unidecode
 from aiohttp import request
 from extract import ContentExtractor
 from lxml.html import tostring
+import re
+
+def no_accent_vietnamese(s):
+    s = re.sub(r'[àáạảãâầấậẩẫăằắặẳẵ]', 'a', s)
+    s = re.sub(r'[ÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪ]', 'A', s)
+    s = re.sub(r'[èéẹẻẽêềếệểễ]', 'e', s)
+    s = re.sub(r'[ÈÉẸẺẼÊỀẾỆỂỄ]', 'E', s)
+    s = re.sub(r'[òóọỏõôồốộổỗơờớợởỡ]', 'o', s)
+    s = re.sub(r'[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]', 'O', s)
+    s = re.sub(r'[ìíịỉĩ]', 'i', s)
+    s = re.sub(r'[ÌÍỊỈĨ]', 'I', s)
+    s = re.sub(r'[ùúụủũưừứựửữ]', 'u', s)
+    s = re.sub(r'[ƯỪỨỰỬỮÙÚỤỦŨ]', 'U', s)
+    s = re.sub(r'[ỳýỵỷỹ]', 'y', s)
+    s = re.sub(r'[ỲÝỴỶỸ]', 'Y', s)
+    s = re.sub(r'[Đ]', 'D', s)
+    s = re.sub(r'[đ]', 'd', s)
+    return s
+
+
 spinService = SpinService()
 
 config = Config()
@@ -53,12 +73,15 @@ def process_content(article,url):
 
     # # article.article_html = tostring(article.top_node,encoding="unicode")
         soup = BeautifulSoup(article.article_html, 'html.parser')
-        print(url["keyword"]["Keyword"])
-        print(unidecode(url["keyword"]["Keyword"]))
-        print(str(unidecode(url["keyword"]["Keyword"])) + "ok")
-        self_url = str(unidecode(url["keyword"]["Keyword"]))+ ' ' + str(time.time()).split(".")[0]
+        print(type(url["keyword"]["Keyword"]))
+        print(url["keyword"]["Keyword"] + "ok")
+        print(no_accent_vietnamese(url["keyword"]["Keyword"]))
+        a= no_accent_vietnamese(url["keyword"]["Keyword"]) + "ok"
+        print(str(a))
+        self_url = str(no_accent_vietnamese(url["keyword"]["Keyword"]))+ ' ' + str(time.time()).split(".")[0]
         self_url = self_url.replace(" ","-")
         self_url = self_url.replace(".","")
+
         self_url = self_url.replace("\n","")
         print(self_url)
         domain = urlparse(url["link"]).netloc

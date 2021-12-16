@@ -1,3 +1,4 @@
+
 def get_database():
     from pymongo import MongoClient
     import pymongo
@@ -17,7 +18,8 @@ from googlesearch import search
 import requests
 import time
 import random
-from newspaper import Config,Article
+from Title_fix import Article
+from configuration import Configuration
 from urllib.parse import urlparse
 from requests import get
 from pymongo import MongoClient
@@ -59,6 +61,7 @@ with cl.watch()  as stream:
                   h = 0
                   for i in search(keyword["keyword"]["Keyword"], tld="com.vn",start=0, num=20,stop=20,pause=1,user_agent=random.choice(userAgents),lang="vi",country="vn"):
                     i = i.split("#")[0]
+
                     h = h+1
                     if client1.urldone[str(keyword["web_info"]["_id"])].count_documents({"link":i})>0:
                         continue
@@ -67,7 +70,7 @@ with cl.watch()  as stream:
                         continue
                     a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
   
-                    config = Config()
+                    config = Configuration()
                     config.set_language("vi")
                     config.request_timeout = 10
                     config.browser_user_agent = random.choice(userAgents)
@@ -92,7 +95,6 @@ with cl.watch()  as stream:
                                     hhh= j.split(" ")[0].split("=")[-1]
                                     if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
                                         i["src"] = hhh
-                                        print(hhh)
                                         break
                           except Exception as e:
                               print(str(e))
@@ -129,7 +131,7 @@ with cl.watch()  as stream:
                       continue
                   a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
 
-                  config = Config()
+                  config = Configuration()
                   config.request_timeout = 10
                   config.browser_user_agent = random.choice(userAgents)
 
@@ -154,7 +156,6 @@ with cl.watch()  as stream:
                                   hhh= j.split(" ")[0].split("=")[-1]
                                   if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
                                       i["src"] = hhh
-                                      print(hhh)
                                       break
                         except Exception as e:
                             print(str(e))

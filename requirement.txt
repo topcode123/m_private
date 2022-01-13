@@ -3,6 +3,6 @@ aiohttp==3.7.4.post0
 aiomultiprocess==0.9.0
 newspaper3k==0.2.8
 dnspython
-pymongo
+pymongo ==3.12.0
 underthesea
 nltk

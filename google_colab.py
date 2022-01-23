@@ -13,7 +13,9 @@ def get_database():
     return client
     
 # This is added so that many files can reuse the function get_database()
+from sqlalchemy import true
 from ImportContent import *
+from google_colab_support import *
 from googlesearch import search
 import requests
 import time
@@ -44,24 +46,78 @@ cl1 = client1.keywords
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',  # This is another valid field
 }
-with cl.watch()  as stream:
+def ColabSimple():
+      if cl.count_documents({})>0:
+        try:
+          # h=h+1
+          keyword = cl.find_one_and_delete({})
+          if keyword:
+                if keyword["campaign"]["language"] == "vi":
+                  try:
+                    h = 0
+                    for i in search(keyword["keyword"]["Keyword"], tld="com.vn",start=0, num=20,stop=20,pause=1,user_agent=random.choice(userAgents),lang="vi",country="vn"):
+                      i = i.split("#")[0]
 
-  while stream.alive:
-    if time.time() - lasttime>100:
-      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
-      lasttime = time.time()
-    cancle = False
-    if cl.count_documents({})>0:
-      try:
-        # h=h+1
-        keyword = cl.find_one_and_delete({})
-        if keyword:
-              if keyword["campaign"]["language"] == "vi":
-                try:
+                      h = h+1
+                      if client1.urldone[str(keyword["web_info"]["_id"])].count_documents({"link":i})>0:
+                          continue
+                      domain = urlparse(i).netloc
+                      if domain in keyword["web_info"]["Blacklist"]:
+                          continue
+                      a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
+    
+                      config = Configuration()
+                      config.set_language("vi")
+                      config.request_timeout = 10
+                      config.browser_user_agent = random.choice(userAgents)
+
+                      try:
+                        r = requests.get(a[0]["link"],verify=False,timeout=10,headers=headers).content
+                        r = r.decode("utf-8")
+                        soups = BeautifulSoup(r)
+                        img = soups.find_all("img")
+                        for i in img:
+                            i.replace_with(replace_attr(i,'data-src', 'src'))
+                            i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
+                            i.replace_with(replace_attr(i,'lazy-src', 'src'))
+                            i.replace_with(replace_attr(i,'data-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'data-original', 'src'))
+                            try:
+                              liii = re.findall("lazy.*=\".*\"",str(i))
+                              if len(liii)>0:
+                                  for j in liii:
+                                      hhh= j.split(" ")[0].split("=")[-1]
+                                      if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
+                                          i["src"] = hhh
+                                          break
+                            except Exception as e:
+                                print(str(e))
+                        soups = str(soups)
+                        article = Article("",keep_article_html=True,config=config)
+                        article.download(soups)
+                        article.parse()
+                        if len(article.text.split(" "))>400 and ("content=\"vi_" in article.html or "lang=\"vi\"" in article.html):
+                          try:
+                            done = ImportContents(article,a[0])
+                            if done:
+                              client1.urldone[str(keyword["web_info"]["_id"])].insert_one({"link":a[0]["link"]})
+                              break
+                          except Exception as e:
+                            print(str(e))
+                        if h==20:
+                          cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
+                          break
+                      except Exception as e:
+                        print(e)
+
+                  except Exception as e:
+                    print(str(e))
+                else:
                   h = 0
-                  for i in search(keyword["keyword"]["Keyword"], tld="com.vn",start=0, num=20,stop=20,pause=1,user_agent=random.choice(userAgents),lang="vi",country="vn"):
+                  for i in search(keyword["keyword"]["Keyword"], tld="com",start=0, num=20,stop=20,pause=1,user_agent=random.choice(userAgents),lang="en"):
                     i = i.split("#")[0]
-
                     h = h+1
                     if client1.urldone[str(keyword["web_info"]["_id"])].count_documents({"link":i})>0:
                         continue
@@ -69,15 +125,15 @@ with cl.watch()  as stream:
                     if domain in keyword["web_info"]["Blacklist"]:
                         continue
                     a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
-  
+
                     config = Configuration()
-                    config.set_language("vi")
                     config.request_timeout = 10
                     config.browser_user_agent = random.choice(userAgents)
 
                     try:
                       r = requests.get(a[0]["link"],verify=False,timeout=10,headers=headers).content
                       r = r.decode("utf-8")
+
                       soups = BeautifulSoup(r)
                       img = soups.find_all("img")
                       for i in img:
@@ -102,7 +158,7 @@ with cl.watch()  as stream:
                       article = Article("",keep_article_html=True,config=config)
                       article.download(soups)
                       article.parse()
-                      if len(article.text.split(" "))>400 and ("content=\"vi_" in article.html or "lang=\"vi\"" in article.html):
+                      if len(article.text.split(" "))>400 and ("content=\"en_" in article.html or "lang=\"en\"" in article.html):
                         try:
                           done = ImportContents(article,a[0])
                           if done:
@@ -115,71 +171,20 @@ with cl.watch()  as stream:
                         break
                     except Exception as e:
                       print(e)
+        except Exception as e:
+          print(e)
+          if "429" in str(e):
+            raise("too many")    
+while True:
 
-                except Exception as e:
-                  print(str(e))
-                  continue
-              else:
-                h = 0
-                for i in search(keyword["keyword"]["Keyword"], tld="com",start=0, num=20,stop=20,pause=1,user_agent=random.choice(userAgents),lang="en"):
-                  i = i.split("#")[0]
-                  h = h+1
-                  if client1.urldone[str(keyword["web_info"]["_id"])].count_documents({"link":i})>0:
-                      continue
-                  domain = urlparse(i).netloc
-                  if domain in keyword["web_info"]["Blacklist"]:
-                      continue
-                  a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
-
-                  config = Configuration()
-                  config.request_timeout = 10
-                  config.browser_user_agent = random.choice(userAgents)
-
-                  try:
-                    r = requests.get(a[0]["link"],verify=False,timeout=10,headers=headers).content
-                    r = r.decode("utf-8")
-
-                    soups = BeautifulSoup(r)
-                    img = soups.find_all("img")
-                    for i in img:
-                        i.replace_with(replace_attr(i,'data-src', 'src'))
-                        i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
-                        i.replace_with(replace_attr(i,'lazy-src', 'src'))
-                        i.replace_with(replace_attr(i,'data-srcset', 'srcset'))
-                        i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
-                        i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
-                        i.replace_with(replace_attr(i,'data-original', 'src'))
-                        try:
-                          liii = re.findall("lazy.*=\".*\"",str(i))
-                          if len(liii)>0:
-                              for j in liii:
-                                  hhh= j.split(" ")[0].split("=")[-1]
-                                  if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
-                                      i["src"] = hhh
-                                      break
-                        except Exception as e:
-                            print(str(e))
-                    soups = str(soups)
-                    article = Article("",keep_article_html=True,config=config)
-                    article.download(soups)
-                    article.parse()
-                    if len(article.text.split(" "))>400 and ("content=\"en_" in article.html or "lang=\"en\"" in article.html):
-                      try:
-                        done = ImportContents(article,a[0])
-                        if done:
-                          client1.urldone[str(keyword["web_info"]["_id"])].insert_one({"link":a[0]["link"]})
-                          break
-                      except Exception as e:
-                        print(str(e))
-                    if h==20:
-                      cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
-                      break
-                  except Exception as e:
-                    print(e)
-      except Exception as e:
-        print(e)
-        if "429" in str(e):
-          raise("too many")           # except Exception as e:
+  while True:
+    if time.time() - lasttime>100:
+      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
+      lasttime = time.time()
+    cancle = False
+    ColabSimple()
+    ColabSupport()
+       # except Exception as e:
     if cancle:
       break
                 # print(h)

@@ -27,7 +27,7 @@ from requests import get
 from pymongo import MongoClient
 import time
 colabstatus  = MongoClient(CONNECTION_STRING_MGA1).colabstatus.data
-filename = get('http://172.28.0.2:9000/api/sessions').json()[0]['name']
+# filename = get('http://172.28.0.2:9000/api/sessions').json()[0]['name']
 def replace_attr(soup, from_attr: str, to_attr: str):
     if from_attr in str(soup):
         soup[to_attr] = soup[from_attr]
@@ -77,6 +77,7 @@ def ColabSimple():
                         soups = BeautifulSoup(r)
                         img = soups.find_all("img")
                         for i in img:
+                          try:
                             i.replace_with(replace_attr(i,'data-src', 'src'))
                             i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
                             i.replace_with(replace_attr(i,'lazy-src', 'src'))
@@ -84,16 +85,19 @@ def ColabSimple():
                             i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
                             i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
                             i.replace_with(replace_attr(i,'data-original', 'src'))
-                            try:
-                              liii = re.findall("lazy.*=\".*\"",str(i))
-                              if len(liii)>0:
-                                  for j in liii:
-                                      hhh= j.split(" ")[0].split("=")[-1]
-                                      if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
-                                          i["src"] = hhh
-                                          break
-                            except Exception as e:
-                                print(str(e))
+                          except:
+                            pass
+
+                          try:
+                            liii = re.findall("lazy.*=\".*\"",str(i))
+                            if len(liii)>0:
+                                for j in liii:
+                                    hhh= j.split(" ")[0].split("=")[-1]
+                                    if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
+                                        i["src"] = hhh
+                                        break
+                          except Exception as e:
+                              traceback.print_exc()
                         soups = str(soups)
                         article = Article("",keep_article_html=True,config=config)
                         article.download(soups)
@@ -105,12 +109,12 @@ def ColabSimple():
                               client1.urldone[str(keyword["web_info"]["_id"])].insert_one({"link":a[0]["link"]})
                               break
                           except Exception as e:
-                            print(str(e))
+                            traceback.print_exc()
                         if h==20:
                           cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                           break
                       except Exception as e:
-                        print(e)
+                        traceback.print_exc()
 
                   except Exception as e:
                     print(str(e))
@@ -137,13 +141,16 @@ def ColabSimple():
                       soups = BeautifulSoup(r)
                       img = soups.find_all("img")
                       for i in img:
-                          i.replace_with(replace_attr(i,'data-src', 'src'))
-                          i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
-                          i.replace_with(replace_attr(i,'lazy-src', 'src'))
-                          i.replace_with(replace_attr(i,'data-srcset', 'srcset'))
-                          i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
-                          i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
-                          i.replace_with(replace_attr(i,'data-original', 'src'))
+                          try:
+                            i.replace_with(replace_attr(i,'data-src', 'src'))
+                            i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
+                            i.replace_with(replace_attr(i,'lazy-src', 'src'))
+                            i.replace_with(replace_attr(i,'data-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
+                            i.replace_with(replace_attr(i,'data-original', 'src'))
+                          except:
+                            pass
                           try:
                             liii = re.findall("lazy.*=\".*\"",str(i))
                             if len(liii)>0:
@@ -153,7 +160,7 @@ def ColabSimple():
                                         i["src"] = hhh
                                         break
                           except Exception as e:
-                              print(str(e))
+                              traceback.print_exc()
                       soups = str(soups)
                       article = Article("",keep_article_html=True,config=config)
                       article.download(soups)
@@ -165,22 +172,22 @@ def ColabSimple():
                             client1.urldone[str(keyword["web_info"]["_id"])].insert_one({"link":a[0]["link"]})
                             break
                         except Exception as e:
-                          print(str(e))
+                          traceback.print_exc()
                       if h==20:
                         cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                         break
                     except Exception as e:
-                      print(e)
+                      traceback.print_exc()
         except Exception as e:
-          print(e)
+          traceback.print_exc()
           if "429" in str(e):
             raise("too many")    
 while True:
 
   while True:
-    if time.time() - lasttime>100:
-      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
-      lasttime = time.time()
+    # if time.time() - lasttime>100:
+    #   colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
+    #   lasttime = time.time()
     cancle = False
     ColabSimple()
     ColabSupport()

@@ -286,9 +286,9 @@ def process_content(article,url,self_url,first_tier_link,first_tier_title):
         resultp= []
         for i in listp:
             if i["language"]== "vi":
-                resultp.append(spinService.spin_paragraph(i["ptag"],i["keywords"],i["linksp"]))
+                resultp.append(spinService.spin_paragraph(i["ptag"],i["keywords"]))
             else:
-                resultp.append(spinService.spin_paragraph_en(i["ptag"],i["keywords"],i["linksp"]))
+                resultp.append(spinService.spin_paragraph_en(i["ptag"],i["keywords"]))
 
         for k1,k2 in zip(listp,resultp):
             k1["ptag"].replace_with(k2)
@@ -408,7 +408,7 @@ def importcontent(content):
 
     return True
 
-def ImportContents(article,url):
+def ImportContentssp(article,url):
     self_url = unidecode(url["keyword"]["Keyword"])+ ' ' + str(time.time()).split(".")[0]
     self_url = self_url.replace(" ","-")
     self_url = self_url.replace(".","")
@@ -416,7 +416,8 @@ def ImportContents(article,url):
         "article_html":article.article_html,
         "title":article.title
     }
-    if url["keyword"]["tier"] ==1:
+    print(url)
+    if url["keyword"]["tier"] == 1:
         keywords[url['campaign']["WebsiteId"]].update_one({"_id":ObjectId( url["keyword"]["_id"])},{"$set":{"status":"waiting_import","link":url["web_info"]["Website"] +"/"+ self_url}})
         if url["campaign"]["MaxTier"]>url["keyword"]["tier"]:
             url["campaign"]["queue_support_keyword"].append(url["keyword"]["_id"])

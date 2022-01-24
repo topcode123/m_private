@@ -70,6 +70,7 @@ def ColabSupport():
                       soups = BeautifulSoup(r)
                       img = soups.find_all("img")
                       for i in img:
+                        try:
                           i.replace_with(replace_attr(i,'data-src', 'src'))
                           i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
                           i.replace_with(replace_attr(i,'lazy-src', 'src'))
@@ -77,23 +78,25 @@ def ColabSupport():
                           i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
                           i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
                           i.replace_with(replace_attr(i,'data-original', 'src'))
-                          try:
-                            liii = re.findall("lazy.*=\".*\"",str(i))
-                            if len(liii)>0:
-                                for j in liii:
-                                    hhh= j.split(" ")[0].split("=")[-1]
-                                    if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
-                                        i["src"] = hhh
-                                        print(hhh)
-                                        break
-                          except Exception as e:
-                              print(str(e))
+                        except:
+                          pass
+                        try:
+                          liii = re.findall("lazy.*=\".*\"",str(i))
+                          if len(liii)>0:
+                              for j in liii:
+                                  hhh= j.split(" ")[0].split("=")[-1]
+                                  if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
+                                      i["src"] = hhh
+                                      print(hhh)
+                                      break
+                        except Exception as e:
+                            print(str(e))
                       soups = str(soups)
                       article = Article("",keep_article_html=True,config=config)
                       article.download(soups)
                       article.parse()
                       if len(article.text.split(" "))>400 and ("content=\"vi_" in article.html or "lang=\"vi\"" in article.html):
-                        done = ImportContents(article,a[0])
+                        done = ImportContentssp(article,a[0])
 
                         try:
                           if done:
@@ -105,7 +108,7 @@ def ColabSupport():
                         cl1sp[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                         break
                     except Exception as e:
-                      print(e)
+                      traceback.print_exc()
 
                 except Exception as e:
                   print(str(e))
@@ -132,6 +135,7 @@ def ColabSupport():
                     soups = BeautifulSoup(r)
                     img = soups.find_all("img")
                     for i in img:
+                      try:
                         i.replace_with(replace_attr(i,'data-src', 'src'))
                         i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
                         i.replace_with(replace_attr(i,'lazy-src', 'src'))
@@ -139,34 +143,36 @@ def ColabSupport():
                         i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
                         i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
                         i.replace_with(replace_attr(i,'data-original', 'src'))
-                        try:
-                          liii = re.findall("lazy.*=\".*\"",str(i))
-                          if len(liii)>0:
-                              for j in liii:
-                                  hhh= j.split(" ")[0].split("=")[-1]
-                                  if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
-                                      i["src"] = hhh
-                                      print(hhh)
-                                      break
-                        except Exception as e:
-                            print(str(e))
+                      except:
+                        pass
+                      try:
+                        liii = re.findall("lazy.*=\".*\"",str(i))
+                        if len(liii)>0:
+                            for j in liii:
+                                hhh= j.split(" ")[0].split("=")[-1]
+                                if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
+                                    i["src"] = hhh
+                                    print(hhh)
+                                    break
+                      except Exception as e:
+                          print(str(e))
                     soups = str(soups)
                     article = Article("",keep_article_html=True,config=config)
                     article.download(soups)
                     article.parse()
                     if len(article.text.split(" "))>400 and ("content=\"en_" in article.html or "lang=\"en\"" in article.html):
                       try:
-                        done = ImportContents(article,a[0])
+                        done = ImportContentssp(article,a[0])
                         if done:
                           client1.urldone[str(keyword["web_info"]["_id"])].insert_one({"link":a[0]["link"]})
                           break
                       except Exception as e:
-                        print(str(e))
+                        traceback.print_exc()
                     if h==20:
                       cl1sp[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                       break
                   except Exception as e:
-                    print(e)
+                    traceback.print_exc()
               if keyword["keyword"]["type"] == "lasttier1":
                 try:
                   update_tier1(a[0])
@@ -174,7 +180,7 @@ def ColabSupport():
                   traceback.print_exc()
 
       except Exception as e:
-        print(e)
+        traceback.print_exc()
         if "429" in str(e):
           raise("too many")           # except Exception as e:
                 # print(h)

@@ -445,6 +445,7 @@ def update_tier1(url):
                 "title":text[i]["title"]
             }
             url["keyword"] = text[i]["tt"]["keyword"]
+            time.sleep(30)
             importcontent(process_content(article1,url,text[i]["self_url"],text[(i+1)%numbercount]["self_url"],text[(i+1)%numbercount]["title"]))
             
     elif contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})==1:

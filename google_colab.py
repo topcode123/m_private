@@ -189,7 +189,7 @@ while True:
     #   colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
     #   lasttime = time.time()
     cancle = False
-    ColabSimple()
+    # ColabSimple()
     ColabSupport()
        # except Exception as e:
     if cancle:

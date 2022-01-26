@@ -1,3 +1,4 @@
+from pickle import TRUE
 from newspaper import Config
 from sys import prefix
 from pymongo import MongoClient
@@ -52,11 +53,9 @@ def replace_attr(soup, from_attr: str, to_attr: str):
 
 
 def process_content(article,url,self_url,first_tier_link,first_tier_title):
-    # print(url)
     
         article["article_html"] = str(html.unescape(article["article_html"]))
 
-    # # article["article_html"] = tostring(article.top_node,encoding="unicode")
         soup = BeautifulSoup(article["article_html"], 'html.parser')
 
         domain = urlparse(url["link"]).netloc
@@ -64,45 +63,6 @@ def process_content(article,url,self_url,first_tier_link,first_tier_title):
         src_img = []
         pre_link = None
         for i in img:
-            # try:
-            #     i.replace_with(replace_attr(i,'data-src', 'src'))
-            #     i.replace_with(replace_attr(i,'data-lazy-src', 'src'))
-            #     i.replace_with(replace_attr(i,'lazy-src', 'src'))
-            #     i.replace_with(replace_attr(i,'data-srcset', 'srcset'))
-            #     i.replace_with(replace_attr(i,'data-lazy-srcset', 'srcset'))
-            #     i.replace_with(replace_attr(i,'lazy-srcset', 'srcset'))
-            #     i.replace_with(replace_attr(i,'data-original', 'src'))
-            # except Exception as e:
-            #     print(str(e))
-
-            # try:
-            #     a = re.findall("lazy.*=\".*\"",str(i))
-            #     if len(a)>0:
-            #         for i in a:
-            #             hhh= i.split(" ")[0].split("=")[-1]
-            #             if ".JPG" in hhh.upper() or ".PNG" in hhh.upper():
-            #                 i["src"] = hhh
-            #                 print(hhh)
-            #                 break
-            # except Exception as e:
-            #     print(str(e))
-
-            # if pre_link!= None or str(pre_link) == "br" and i!=None:
-            #     try:
-            #         if i.has_attr("src") and pre_link.has_attr("src") and i.has_attr("alt") and pre_link.has_attr("alt"):
-            #             if pre_link["src"] == i["src"] or pre_link["alt"] == i["alt"]:
-            #                 if "base64" in pre_link["src"]:
-            #                     aa = soup.new_tag("br")
-            #                     pre_link.replace_with(aa)
-            #                 else:
-            #                     aa = soup.new_tag("br")
-            #                     i.replace_with(aa)
-            #                     pre_link = i
-            #                     continue
-            #     except:
-            #         pass
-            # pre_link = i
-            # i['style'] ="width:100%"
             try:
                 if i.has_attr("src"):
                     if i["src"] in src_img:
@@ -146,19 +106,7 @@ def process_content(article,url,self_url,first_tier_link,first_tier_title):
             except:
                 pass
         # print(src_img)
-        if url["campaign"]["Top10url"]!=None and url["campaign"]["Top10url"]!=[]:
-            if len(url["campaign"]["Top10url"])>0:
-                internal_link_total = random.choice(url["campaign"]["Top10url"])
-                internal_link = internal_link_total["link"]
-                internal_link_title = internal_link_total["name"]
-                internal_link_total2 = random.choice(url["campaign"]["Top10url"])
-                internal_link2 = internal_link_total2["link"]
-                internal_link_title2 = internal_link_total2["name"]
-        else:
-            internal_link = None
-            internal_link_title = None
-            internal_link2 = None 
-            internal_link_title2 = None
+
 
         if url["campaign"]["CategoryId"]!=None and url["campaign"]["CategoryName"]!=None and url["campaign"]["CategoryLink"]!=None:
             # print(acate_name)
@@ -223,23 +171,7 @@ def process_content(article,url,self_url,first_tier_link,first_tier_title):
                     first_match_string = j_string[match_b:match_b+match_size]
                     size_match = match_size
         thep[max_match_index].replace_with(BeautifulSoup("<p>"+str(thep[max_match_index]).replace(first_match_string,"<a href='{}'>{}</a>".format(url["keyword"]["linksupport"],url["keyword"]["keywordsupport"]),1)+"</p>"))
-        # if len(url["campaign"]["Top10url"])>0:
-        #     if internal_link and internal_link_title:
-        #         internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
-        #         internal_link_p_tag1 = BeautifulSoup(internal_link_p_tag1,"html.parser")
-        #         try:
-        #             thep[int(len(thep)/2)].append(internal_link_p_tag1)
-        #         except:
-        #             pass
 
-        #     if internal_link2 and internal_link_title2:
-        #         internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Xem thêm: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
-
-        #         internal_link_p_tag2 = BeautifulSoup(internal_link_p_tag2,"html.parser")
-        #         try:
-        #             thep[len(thep)-4].append(internal_link_p_tag2)
-        #         except:
-        #             pass
 
         self_link_p_tag =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Bạn đang đọc: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/'+self_url,article["title"],article["title"])
 
@@ -284,14 +216,17 @@ def process_content(article,url,self_url,first_tier_link,first_tier_title):
         paper.append(nguon)
         listp = [{"ptag":m,"keywords":url["keyword"]["Keyword"],"linksp":url["keyword"]["linksupport"],"language":url["campaign"]["language"]} for m in paper.find_all("p")]
         resultp= []
-        for i in listp:
-            if i["language"]== "vi":
-                resultp.append(spinService.spin_paragraph(i["ptag"],i["keywords"]))
-            else:
-                resultp.append(spinService.spin_paragraph_en(i["ptag"],i["keywords"]))
+        try:
+            for i in listp:
+                if i["language"]== "vi":
+                    resultp.append(spinService.spin_paragraph(i["ptag"],i["keywords"]))
+                else:
+                    resultp.append(spinService.spin_paragraph_en(i["ptag"],i["keywords"]))
 
-        for k1,k2 in zip(listp,resultp):
-            k1["ptag"].replace_with(k2)
+            for k1,k2 in zip(listp,resultp):
+                k1["ptag"].replace_with(k2)
+        except:
+            pass
         paper = str(paper)
         paper  = paper.replace("&lt;","<")
         paper  = paper.replace("&gt;",">")
@@ -406,7 +341,9 @@ def importcontent(content):
         campaign_root.update_one({"_id":ObjectId( content['user']["campaign"]["_id"])},{"$set":{"Top10url":url["Top10url"]}})
         keywords[content['user']['campaign']["WebsiteId"]].update_one({"_id":ObjectId( content['user']["keyword"]["_id"])},{"$set":{"status":"done","link":content['user']["web_info"]["Website"] +"/"+ post['slug']}})
 
-    return True
+        return True
+    else:
+        return False
 
 def ImportContentssp(article,url):
     self_url = unidecode(url["keyword"]["Keyword"])+ ' ' + str(time.time()).split(".")[0]
@@ -416,51 +353,44 @@ def ImportContentssp(article,url):
         "article_html":article.article_html,
         "title":article.title
     }
-    print(url)
     if url["keyword"]["tier"] == 1:
-        keywords[url['campaign']["WebsiteId"]].update_one({"_id":ObjectId( url["keyword"]["_id"])},{"$set":{"status":"waiting_import","link":url["web_info"]["Website"] +"/"+ self_url}})
-        if url["campaign"]["MaxTier"]>url["keyword"]["tier"]:
-            url["campaign"]["queue_support_keyword"].append(url["keyword"]["_id"])
-            campaign_root.update_one({"_id":ObjectId( url["campaign"]["_id"])},{"$set":{"queue_tier":url["campaign"]["queue_tier"],"FirstCircle":False,"queue_support_keyword": url["campaign"]["queue_support_keyword"]}})
+        numbercount = contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})
+        if numbercount==0:
+            keywords[url['campaign']["WebsiteId"]].update_one({"_id":ObjectId( url["keyword"]["_id"])},{"$set":{"status":"waiting_import","link":url["web_info"]["Website"] +"/"+ self_url}})
+            if url["campaign"]["MaxTier"]>url["keyword"]["tier"]:
+                url["campaign"]["queue_support_keyword"].append(url["keyword"]["_id"])
+                campaign_root.update_one({"_id":ObjectId( url["campaign"]["_id"])},{"$set":{"queue_tier":url["campaign"]["queue_tier"],"FirstCircle":False,"queue_support_keyword": url["campaign"]["queue_support_keyword"]}})
 
-        contenttier.data.insert_one({"campaignid":str(url["campaign"]["_id"]),"tt":url,"article_html":article["article_html"],"title":article["title"],"self_url":self_url,"last_circle_link":"","last_circle_tile":""})
-        return True
+            contenttier.data.insert_one({"campaignid":str(url["campaign"]["_id"]),"tt":url,"article_html":article["article_html"],"title":article["title"],"self_url":self_url,"last_circle_link":self_url,"last_circle_tile":article["title"]})
+            done = True
+        else:
+            text = contenttier.data.find_one({"campaignid":str(url["campaign"]["_id"])})
+            done = importcontent(process_content(article,url,self_url,text["last_circle_link"],text["last_circle_tile"]))
+            if done:
+                contenttier.data.update_one({"_id":text["_id"]},{"$set":{"last_circle_link":self_url,"last_circle_tile":article["title"]}})
+        return done
     else:
         ct = process_content(article,url,self_url,"","")
-        importcontent(ct)
+        done = importcontent(ct)
         if url["campaign"]["MaxTier"]>url["keyword"]["tier"]:
             url["campaign"]["queue_support_keyword"].append(url["keyword"]["_id"])
             campaign_root.update_one({"_id":ObjectId( url["campaign"]["_id"])},{"$set":{"queue_tier":url["campaign"]["queue_tier"],"FirstCircle":False,"queue_support_keyword": url["campaign"]["queue_support_keyword"]}})
-        return True
+        return done
 def update_tier1(url):
-    if contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})>1:
+    if contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})>=1:
         numbercount = contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})
         text = []
-        text1 = contenttier.data.find({"campaignid":str(url["campaign"]["_id"])})
-        for j in text1:
-            text.append(j)
-        for i in range(numbercount):
+        text1 = contenttier.data.find_one_and_delete({"campaignid":str(url["campaign"]["_id"])})
+        text.append(text1)
+        for i in range(len(text)):
+            if text[i]["last_circle_tile"] == text[i]["title"]:
+                text[i]["last_circle_link"] = ""
+                text[i]["last_circle_tile"] = ""
             article1 = {
                 "article_html":text[i]["article_html"],
                 "title":text[i]["title"]
             }
             url["keyword"] = text[i]["tt"]["keyword"]
-            time.sleep(30)
-            importcontent(process_content(article1,url,text[i]["self_url"],text[(i+1)%numbercount]["self_url"],text[(i+1)%numbercount]["title"]))
-            
-    elif contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})==1:
-        numbercount = contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})
-        text = []
-        text1 = contenttier.data.find({"campaignid":str(url["campaign"]["_id"])})
-        for j in text1:
-            text.append(j)
-        for i in range(contenttier.data.count({"campaignid":str(url["campaign"]["_id"])})):
-            text[i]["last_circle_link"] == ""
-            text[i]["last_circle_tile"] == ""
-            article1 = {
-                "article_html":text[i]["article_html"],
-                "title":text[i]["title"]
-            }
             importcontent(process_content(article1,url,text[i]["self_url"],text[i]["last_circle_link"],text[i]["last_circle_tile"]))
     contenttier.data.delete_many({"campaignid":str(url["campaign"]["_id"])})
 

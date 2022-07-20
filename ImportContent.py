@@ -2,7 +2,7 @@ from newspaper import Config
 from sys import prefix
 from pymongo import MongoClient
 import time
-import html.parser    
+import html.parser
 import requests
 from requests.models import HTTPBasicAuth
 from Settings import *
@@ -18,7 +18,7 @@ import requests
 import json
 import base64
 import html
-import html.parser  
+import html.parser
 from Settings import *
 from bson import ObjectId
 from pymongo import MongoClient
@@ -30,6 +30,8 @@ from aiohttp import request
 from extract import ContentExtractor
 from lxml.html import tostring
 import re
+import openai
+
 
 def no_accent_vietnamese(s):
     s = re.sub(r'[àáạảãâầấậẩẫăằắặẳẵ]', 'a', s)
@@ -177,7 +179,7 @@ def process_content(article,url):
         else:
             internal_link = None
             internal_link_title = None
-            internal_link2 = None 
+            internal_link2 = None
             internal_link_title2 = None
 
         if url["campaign"]["CategoryId"]!=None and url["campaign"]["CategoryName"]!=None and url["campaign"]["CategoryLink"]!=None:
@@ -298,8 +300,8 @@ def process_content(article,url):
         for k1,k2 in zip(listp,resultp):
             k1["ptag"].replace_with(k2)
         paper = str(paper)
-        paper  = paper.replace("&lt;","<")
-        paper  = paper.replace("&gt;",">")
+        paper = paper.replace("&lt;","<")
+        paper = paper.replace("&gt;",">")
         paper= paper.replace(" . ", ". ")
         paper = paper.replace(" , ", ", ")
         try:
@@ -314,6 +316,10 @@ def process_content(article,url):
                     paper = paper.replace(i,url["web_info"]["Text_replace_doc"][i])
         except:
             pass
+        print("URLLLL: ", url)
+        if url["web_info"]["UserId"] == "62d6c9e17fe67e693ea1eda6":
+            print("URL: ", url["web_info"]["UserId"] )
+            gpt_processing(str(paper))
         content = {
             "user":url,
             "title":article.title,
@@ -327,6 +333,15 @@ def process_content(article,url):
         return content
 
 
+def gpt_processing(raw_data):
+    openai.api_key = "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"
+    print(len(raw_data) + 1)
+    gpt_data_convert_dictionary = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=raw_data,
+        max_tokens=len(raw_data) + 1,
+    )
+    return gpt_data_convert_dictionary["choices"][0]["text"].strip()
 
 def restImgUL(website,user,password,urlimg,src_img):
     headers = {
@@ -383,12 +398,12 @@ def importcontent(content):
     token = base64.b64encode(credentials.encode())
     header = {'Authorization': 'Basic ' + token.decode('utf-8'),'Content-Type': 'application/json','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
     post = {
-        'status': 'publish', 
+        'status': 'publish',
         "title":content["title"],
         "content":content["content"],
         'categories':content["category"],
         'featured_media':int(idthump),
-        'slug': content['slug'] 
+        'slug': content['slug']
     }
 
     with requests.post(website , headers=header,json = post,verify=False) as response:
@@ -410,6 +425,6 @@ def importcontent(content):
 
 def ImportContents(article,url):
     dataprocess = process_content(article,url)
-    import_content =  importcontent(dataprocess)
+    import_content = importcontent(dataprocess)
 
     return import_content

@@ -27,7 +27,7 @@ from requests import get
 from pymongo import MongoClient
 import time
 colabstatus  = MongoClient(CONNECTION_STRING_MGA1).colabstatus.data
-filename = get('http://172.28.0.2:9000/api/sessions').json()[0]['name']
+# filename = get('http://172.28.0.2:9000/api/sessions').json()[0]['name']
 def replace_attr(soup, from_attr: str, to_attr: str):
     if from_attr in str(soup):
         soup[to_attr] = soup[from_attr]
@@ -51,6 +51,7 @@ def ColabSimple():
         try:
           # h=h+1
           keyword = cl.find_one_and_delete({})
+          print("key word: ", keyword)
           if keyword:
                 if keyword["campaign"]["language"] == "vi":
                   try:
@@ -185,9 +186,9 @@ def ColabSimple():
 while True:
 
   while True:
-    if time.time() - lasttime>100:
-      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
-      lasttime = time.time()
+    # if time.time() - lasttime>100:
+      # colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
+      # lasttime = time.time()
     cancle = False
     ColabSimple()
     ColabSupport()

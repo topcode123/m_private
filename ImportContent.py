@@ -254,7 +254,7 @@ def process_content(article,url):
                     pass
             else:
                 if internal_link and internal_link_title:
-                    internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more custom BY HOANGLM with new data process: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
+                    internal_link_p_tag1 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more : <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(internal_link,internal_link_title,internal_link_title)
                     internal_link_p_tag1 = BeautifulSoup(internal_link_p_tag1,"html.parser")
                     try:
                         thep[int(len(thep)/2)].append(internal_link_p_tag1)
@@ -264,7 +264,7 @@ def process_content(article,url):
 
                 self_link_p_tag =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Reading: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/'+self_url,article.title,article.title)
                 if internal_link2 and internal_link_title2:
-                    internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more custom BY HOANGLM with new data process: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
+                    internal_link_p_tag2 =  '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Read more : <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a></p></div>'.format(internal_link2,internal_link_title2,internal_link_title2)
                     internal_link_p_tag2 = BeautifulSoup(internal_link_p_tag2,"html.parser")
                     try:
                         thep[len(thep)-4].append(internal_link_p_tag2)
@@ -281,11 +281,11 @@ def process_content(article,url):
 
 
         if cate_link and cate_name:
-            nguon = '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Source: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> <br> Category custom BY HOANGLM with new data process: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/',url["web_info"]["Website"],url["web_info"]["Website"],cate_link,cate_name,cate_name)
+            nguon = '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Source: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> <br> Category : <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a> </p></div>'.format(url["web_info"]["Website"]+'/',url["web_info"]["Website"],url["web_info"]["Website"],cate_link,cate_name,cate_name)
 
             nguon = BeautifulSoup(nguon,"html.parser")
         else:
-            nguon = '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Source custom BY HOANGLM with new data process: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a>'.format(url["web_info"]["Website"]+'/',url["web_info"]["Website"],url["web_info"]["Website"])
+            nguon = '<div style="margin-bottom:15px;margin-top:15px;"><p style="padding: 20px; background: #eaf0ff;">Source: <a target="_blank" href="{}" rel="bookmark" title="{}">{}</a>'.format(url["web_info"]["Website"]+'/',url["web_info"]["Website"],url["web_info"]["Website"])
             nguon = BeautifulSoup(nguon,"html.parser")
 
         paper.append(nguon)
@@ -316,6 +316,8 @@ def process_content(article,url):
                     paper = paper.replace(i,url["web_info"]["Text_replace_doc"][i])
         except:
             pass
+        print("result: ", url["web_info"]["UserId"] == "62d6c9e17fe67e693ea1eda6")
+        print("web_info: ", url["web_info"])
         if url["web_info"]["UserId"] == "62d6c9e17fe67e693ea1eda6":
             print("URL: ", url["web_info"]["UserId"] )
             gpt_processing(str(paper))

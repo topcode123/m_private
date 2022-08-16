@@ -2257,7 +2257,6 @@
 {P|P.|Phường}
 {khoanh vùng|khoanh vùng phạm vi|phạm vi}
 {điều tra nghiên cứu|điều tra và nghiên cứu|nghiên cứu|nghiên cứu và điều tra}
-{dự án|dự án Bất Động Sản|Dự Án BĐS}
 {diện tích|diện tích quy hoạnh}
 {đất nền|đất nền trống|đất trống}
 {hiện diện|hiện hữu}

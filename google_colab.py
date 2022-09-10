@@ -186,9 +186,9 @@ def ColabSimple():
 while True:
 
   while True:
-    if time.time() - lasttime>100:
-      colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
-      lasttime = time.time()
+    # if time.time() - lasttime>100:
+    #   colabstatus.replace_one({'may': filename}, {'may': filename,'lasttimeupdate':time.time()}, True)
+    #   lasttime = time.time()
     cancle = False
     ColabSimple()
     ColabSupport()

@@ -1891,7 +1891,6 @@
 {Á Lục|Châu Á}
 {bãi biển|bãi tắm biển}
 {đặc thù|đặc trưng}
-{Bất Động Sản|Bất Động Sản Nhà Đất|BĐS|BĐS Nhà Đất}
 {dịch vụ thương mại|Thương Mại|Thương mại dịch vụ}
 {kinh doanh hóa|kinh doanh thương mại hóa|thương mại hóa|thương mại kinh doanh hóa}
 {bờ cát trắng|bờ cát trắng xóa|cát trắng|cát trắng xóa}

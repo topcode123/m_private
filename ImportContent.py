@@ -395,6 +395,8 @@ def importcontent(content):
     # if len(a_link) == len(content['src_img']):
     #     for i,j in zip(content['src_img'],a_link):
     #         content["content"] = content["content"].replace(i,j)
+    content["content"] = content["content"].replace("Bất động sản","")
+    content["content"] = content["content"].replace("bất động sản","")
     credentials = user + ':' + password
     token = base64.b64encode(credentials.encode())
     header = {'Authorization': 'Basic ' + token.decode('utf-8'),'Content-Type': 'application/json','User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}

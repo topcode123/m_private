@@ -411,8 +411,9 @@ def importcontent(content):
 
     with requests.post(website , headers=header,json = post,verify=False) as response:
         res = response.status_code
-        print(response["id"])
-        print(response["guid"])
+        print(response.text)
+        print(f'id: ----- {response["id"]}')
+        print(f'guid: -------{response["guid"]}')
     if res!=None:
         print(res)
         print(post["slug"])

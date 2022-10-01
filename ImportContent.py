@@ -412,9 +412,6 @@ def importcontent(content):
 
     with requests.post(website , headers=header,json = post,verify=False) as response:
         res = response.status_code
-        print(response.text)
-        print(f'id: ----- {response["id"]}')
-        print(f'guid: -------{response["guid"]}')
         comment_queue.insert_one({"id": response.get("id"), "guid": response.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
     if res!=None:
         print(res)

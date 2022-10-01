@@ -55,6 +55,7 @@ spinService = SpinService()
 
 config = Config()
 campaign_root  = MongoClient(CONNECTION_STRING_MGA1).campaigns.data
+comment_queue = MongoClient(CONNECTION_STRING_MGA1).campaigns.comment_queue
 keywords  = MongoClient(CONNECTION_STRING_MGA1).keywords
 
 contentExtractor = ContentExtractor(config)
@@ -414,6 +415,7 @@ def importcontent(content):
         print(response.text)
         print(f'id: ----- {response["id"]}')
         print(f'guid: -------{response["guid"]}')
+        comment_queue.insert_one({"id": response.get("id"), "guid": response.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
     if res!=None:
         print(res)
         print(post["slug"])

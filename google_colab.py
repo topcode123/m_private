@@ -13,7 +13,6 @@ def get_database():
     return client
     
 # This is added so that many files can reuse the function get_database()
-from sqlalchemy import true
 from ImportContent import *
 from google_colab_support import *
 from googlesearch import search

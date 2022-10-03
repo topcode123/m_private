@@ -413,6 +413,7 @@ def importcontent(content):
     with requests.post(website , headers=header,json = post,verify=False) as response:
         res = response.status_code
         try:
+            print(response)
             comment_queue.insert_one({"id": response.get("id"), "guid": response.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
         except Exception as e:
             print(str(e))

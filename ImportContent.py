@@ -413,11 +413,10 @@ def importcontent(content):
     with requests.post(website , headers=header,json = post,verify=False) as response:
         res = response.status_code
         try:
-            print(response)
-            print(response.text)
-            print(response.json(encoding="utf-8"))
-            response_body = response.json(encoding="utf-8")
-            comment_queue.insert_one({"id": response_body.get("id"), "guid": response_body.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
+            campaign = campaign_root.find_one({"_id":ObjectId( content['user']["campaign"]["_id"])})
+            if campaign.get("isautocomment") is True and len(campaign["isautocomment"]) > 0:
+                response_body = response.json(encoding="utf-8")
+                comment_queue.insert_one({"id": response_body.get("id"), "guid": response_body.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
         except Exception as e:
             print(str(e))
     if res!=None:

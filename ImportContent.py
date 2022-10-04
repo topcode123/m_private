@@ -414,7 +414,10 @@ def importcontent(content):
         res = response.status_code
         try:
             print(response)
-            comment_queue.insert_one({"id": response.get("id"), "guid": response.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
+            print(response.text)
+            print(response.json(encoding="utf-8"))
+            response_body = response.json(encoding="utf-8")
+            comment_queue.insert_one({"id": response_body.get("id"), "guid": response_body.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
         except Exception as e:
             print(str(e))
     if res!=None:

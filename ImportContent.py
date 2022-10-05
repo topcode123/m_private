@@ -414,7 +414,7 @@ def importcontent(content):
         res = response.status_code
         try:
             campaign = campaign_root.find_one({"_id":ObjectId( content['user']["campaign"]["_id"])})
-            if campaign.get("isautocomment") is True and len(campaign["isautocomment"]) > 0:
+            if campaign.get("isautocomment") is True and len(campaign["listlinkyoutube"]) > 0:
                 response_body = response.json(encoding="utf-8")
                 comment_queue.insert_one({"id": response_body.get("id"), "guid": response_body.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
         except Exception as e:

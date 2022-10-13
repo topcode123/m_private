@@ -1,3 +1,5 @@
+import datetime
+
 from newspaper import Config
 from sys import prefix
 from pymongo import MongoClient
@@ -416,7 +418,13 @@ def importcontent(content):
             campaign = campaign_root.find_one({"_id":ObjectId( content['user']["campaign"]["_id"])})
             if campaign.get("isautocomment") is True and len(campaign["listlinkyoutube"]) > 0:
                 response_body = response.json(encoding="utf-8")
-                comment_queue.insert_one({"id": response_body.get("id"), "guid": response_body.get("guid"), "campaign_id": content['user']["campaign"]["_id"]})
+                comment_queue.insert_one({
+                    "id": response_body.get("id"),
+                    "guid": response_body.get("guid"),
+                    "campaign_id": content['user']["campaign"]["_id"],
+                    "status": response.status_code,
+                    "created_at": datetime.datetime.now()
+                })
         except Exception as e:
             print(str(e))
     if res!=None:

@@ -9,3 +9,4 @@ nltk
 openai
 SQLAlchemy
 Flask-SQLAlchemy
+Unidecode

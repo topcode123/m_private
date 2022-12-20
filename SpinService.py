@@ -27,6 +27,7 @@ class SpinService:
 
     def spin_paragraph(self,p_paragraph1,keyword):
         p_paragraph = [str(t) if not re.match(r'<[^>]+>', str(t)) else str(t) for t in p_paragraph1.contents]
+        print(p_paragraph)
         word_splits = []
         try:
             for i in p_paragraph:

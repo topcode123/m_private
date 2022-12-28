@@ -8,7 +8,6 @@ import nltk.data
 from bs4 import BeautifulSoup as soup
 from nltk.tokenize import word_tokenize as word_tokenize_en
 import re
-from pymongo import ObjectId
 
 import openai
 

@@ -8,7 +8,6 @@ import nltk.data
 from bs4 import BeautifulSoup as soup
 from nltk.tokenize import word_tokenize as word_tokenize_en
 import re
-from paraphaser import rewrite_article_gpt3
 from pymongo import ObjectId
 
 import openai
@@ -56,7 +55,7 @@ class SpinService:
         word_splits = []
         print("keyword: ", keyword)
         if keyword.get("user").get("UserName") == "KenLil":
-            paragraph = soup(rewrite_article_gpt3(str(p_paragraph1), ), self.type_soup)
+            paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), ), self.type_soup)
             return paragraph
         else:
             try:

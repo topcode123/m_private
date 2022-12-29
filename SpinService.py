@@ -49,12 +49,12 @@ class SpinService:
         openai_response = response['choices']
         return openai_response[-1]['text']
 
-    def spin_paragraph(self, p_paragraph1, keyword):
+    def spin_paragraph(self, p_paragraph1, keyword, userId):
         p_paragraph = [str(t) for t in p_paragraph1.contents]
         word_splits = []
         print("keyword: ", keyword)
         print(f"web_info: {keyword['web_info']}")
-        if keyword["web_info"]["UserId"] == "62d6c9e17fe67e693ea1eda6":
+        if userId == "62d6c9e17fe67e693ea1eda6":
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), ), self.type_soup)
             return paragraph
         else:

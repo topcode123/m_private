@@ -53,7 +53,6 @@ class SpinService:
         p_paragraph = [str(t) for t in p_paragraph1.contents]
         word_splits = []
         print("keyword: ", keyword)
-        print(f"web_info: {keyword['web_info']}")
         if userId == "62d6c9e17fe67e693ea1eda6":
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), ), self.type_soup)
             return paragraph

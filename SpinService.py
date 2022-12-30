@@ -30,14 +30,19 @@ class SpinService:
         self.type_soup = "html.parser"
 
     @staticmethod
-    def rewrite_article_gpt3(raw_data):
+    def rewrite_article_gpt3(raw_data, lang):
         api_key = users.find_one({"Username": 'KenLil'})
         if not api_key:
             raise ValueError("Missing OPEN AI API KEY")
         openai.api_key = api_key.get("apiKey")
+
+        promt = "in a suspensful and mysterious style rewrite text below\n" + raw_data + ""
+        if lang == "vi":
+            promt = "viết lại đoạn văn sau bằng tiếng việt\n" + raw_data + ""
+
         results = openai.Completion.create(
             model="text-davinci-003",
-            prompt="in a suspensful and mysterious style rewrite text below\n" + raw_data + "",
+            prompt=promt,
             temperature=0,
             max_tokens=len(raw_data) + 1,
             top_p=1,
@@ -53,8 +58,8 @@ class SpinService:
         p_paragraph = [str(t) for t in p_paragraph1.contents]
         word_splits = []
         print("keyword: ", keyword)
-        if userId == "62d6c9e17fe67e693ea1eda6":
-            paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), ), self.type_soup)
+        if userId == "615d1d3f570562748141c73e":
+            paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
         else:
             try:

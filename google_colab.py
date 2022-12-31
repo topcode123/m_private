@@ -129,7 +129,6 @@ def ColabSimple():
                     if domain in keyword["web_info"]["Blacklist"]:
                         continue
                     a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
-
                     config = Configuration()
                     config.request_timeout = 10
                     config.browser_user_agent = random.choice(userAgents)
@@ -177,6 +176,7 @@ def ColabSimple():
                         cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                         break
                     except Exception as e:
+                      print(e)
                       traceback.print_exc()
         except Exception as e:
           traceback.print_exc()

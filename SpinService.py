@@ -31,7 +31,7 @@ class SpinService:
 
     @staticmethod
     def rewrite_article_gpt3(raw_data, lang):
-        api_key = users.find_one({"Username": 'KenLil'})
+        api_key = users.find_one({"username": 'KenLil'})
         if not api_key:
             raise ValueError("Missing OPEN AI API KEY")
         openai.api_key = api_key.get("apiKey")
@@ -50,7 +50,6 @@ class SpinService:
             presence_penalty=0
         )
         response = dict(results)
-        print("response GPT3: ", response)
         openai_response = response['choices']
         return openai_response[-1]['text']
 
@@ -59,6 +58,7 @@ class SpinService:
         word_splits = []
         print("keyword: ", keyword)
         if userId == "615d1d3f570562748141c73e":
+            print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
         else:
@@ -85,9 +85,13 @@ class SpinService:
             except:
                 return p_paragraph1
 
-    def spin_paragraph_en(self, p_paragraph1, keyword):
+    def spin_paragraph_en(self, p_paragraph1, keyword, userId):
 
         p_paragraph = [str(t) if not re.match(r'<[^>]+>', str(t)) else str(t) for t in p_paragraph1.contents]
+        if userId == "615d1d3f570562748141c73e":
+            print("use open ai to process")
+            paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "en"), self.type_soup)
+            return paragraph
 
         output = ""
 

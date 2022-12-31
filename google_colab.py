@@ -177,6 +177,7 @@ def ColabSimple():
                         cl1[keyword['campaign']["WebsiteId"]].update_one({"_id":ObjectId(keyword["keyword"]["_id"])},{"$set":{"status":"fail"}})
                         break
                     except Exception as e:
+                      print(e)
                       traceback.print_exc()
         except Exception as e:
           traceback.print_exc()

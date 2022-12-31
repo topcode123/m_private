@@ -31,7 +31,7 @@ class SpinService:
 
     @staticmethod
     def rewrite_article_gpt3(raw_data, lang):
-        api_key = users.find_one({"Username": 'KenLil'})
+        api_key = users.find_one({"username": 'KenLil'})
         if not api_key:
             raise ValueError("Missing OPEN AI API KEY")
         openai.api_key = api_key.get("apiKey")

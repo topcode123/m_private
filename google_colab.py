@@ -49,7 +49,7 @@ def ColabSimple():
       if cl.count_documents({})>0:
         try:
           # h=h+1
-          keyword = "cl.find_one_and_delete({})"
+          keyword = cl.find_one_and_delete({})
           print("key word: ", keyword)
           if keyword:
                 if keyword["campaign"]["language"] == "vi":

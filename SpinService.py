@@ -86,9 +86,13 @@ class SpinService:
             except:
                 return p_paragraph1
 
-    def spin_paragraph_en(self, p_paragraph1, keyword):
+    def spin_paragraph_en(self, p_paragraph1, keyword, userId):
 
         p_paragraph = [str(t) if not re.match(r'<[^>]+>', str(t)) else str(t) for t in p_paragraph1.contents]
+        if userId == "615d1d3f570562748141c73e":
+            print("use open ai to process")
+            paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "en"), self.type_soup)
+            return paragraph
 
         output = ""
 

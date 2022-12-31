@@ -307,7 +307,7 @@ def process_content(article, url):
         if i["language"] == "vi":
             resultp.append(spinService.spin_paragraph(i["ptag"], i["keywords"], url["web_info"]["UserId"]))
         else:
-            resultp.append(spinService.spin_paragraph_en(i["ptag"], i["keywords"]))
+            resultp.append(spinService.spin_paragraph_en(i["ptag"], i["keywords"], url["web_info"]["UserId"]))
 
     for k1, k2 in zip(listp, resultp):
         k1["ptag"].replace_with(k2)

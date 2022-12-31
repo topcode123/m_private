@@ -59,6 +59,7 @@ class SpinService:
         word_splits = []
         print("keyword: ", keyword)
         if userId == "615d1d3f570562748141c73e":
+            print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
         else:

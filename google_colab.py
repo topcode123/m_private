@@ -39,7 +39,7 @@ def replace_attr(soup, from_attr: str, to_attr: str):
 client1 = get_database()
 lasttime=0
 userAgents=['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36','Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36','Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1']
-cl = client1.queuekeywords.mlink
+cl = client1.queuekeywords.data
 url = client1.url_test.data
 cl1 = client1.keywords
 headers = {
@@ -129,7 +129,6 @@ def ColabSimple():
                     if domain in keyword["web_info"]["Blacklist"]:
                         continue
                     a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
-                    print(a)
                     config = Configuration()
                     config.request_timeout = 10
                     config.browser_user_agent = random.choice(userAgents)
@@ -191,7 +190,7 @@ while True:
     #     lasttime = time.time()
     # cancle = False
     ColabSimple()
-    # ColabSupport()
+    ColabSupport()
        # except Exception as e:
     # if cancle:
     #   break

@@ -50,7 +50,6 @@ class SpinService:
             presence_penalty=0
         )
         response = dict(results)
-        print("response GPT3: ", response)
         openai_response = response['choices']
         return openai_response[-1]['text']
 

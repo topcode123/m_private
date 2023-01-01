@@ -65,6 +65,7 @@ def ColabSimple():
                       if domain in keyword["web_info"]["Blacklist"]:
                           continue
                       a= [{"link":i,"campaign":keyword["campaign"],"web_info":keyword["web_info"],"keyword":keyword["keyword"]} ]
+                      print(a)
     
                       config = Configuration()
                       config.set_language("vi")

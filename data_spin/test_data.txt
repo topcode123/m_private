@@ -1,0 +1,6 @@
+{$|USD}
+{&|và}
+{+ Plus|Plus}
+{1 cách|một cách}
+{1 chút nào|chút nào|một chút nào}
+{1 gói quà|1 món quà|một gói quà|một món quà}

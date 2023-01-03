@@ -20,7 +20,7 @@ users = MongoClient(CONNECTION_STRING_MGA1).accounts.data
 class SpinService:
 
     def __init__(self) -> None:
-        with open("dataspin.p", "rb") as file:
+        with open("new_dataspin.p", "rb") as file:
             self.dataspin = pickle.load(file)
         nltk.download('omw-1.4')
         nltk.download('wordnet')
@@ -57,7 +57,7 @@ class SpinService:
         p_paragraph = [str(t) for t in p_paragraph1.contents]
         word_splits = []
         print("keyword: ", keyword)
-        if userId == "615d1d3f570562748141c73e":
+        if userId == "615d1d3f570562748141c73e -------------":
             print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
@@ -88,7 +88,7 @@ class SpinService:
     def spin_paragraph_en(self, p_paragraph1, keyword, userId):
 
         p_paragraph = [str(t) if not re.match(r'<[^>]+>', str(t)) else str(t) for t in p_paragraph1.contents]
-        if userId == "615d1d3f570562748141c73e":
+        if userId == "615d1d3f570562748141c73e ---------------":
             print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "en"), self.type_soup)
             return paragraph

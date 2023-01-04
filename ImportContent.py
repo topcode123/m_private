@@ -303,14 +303,15 @@ def process_content(article, url):
     listp = [{"ptag": m, "keywords": url["keyword"]["Keyword"], "language": url["campaign"]["language"]} for m in
              paper.find_all("p")]
     resultp = []
-    for i in listp:
-        if i["language"] == "vi":
-            resultp.append(spinService.spin_paragraph(i["ptag"], i["keywords"], url["web_info"]["UserId"]))
+    for p_tag in listp:
+        if p_tag["language"] == "vi":
+            resultp.append(spinService.spin_paragraph(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"]))
         else:
-            resultp.append(spinService.spin_paragraph_en(i["ptag"], i["keywords"], url["web_info"]["UserId"]))
+            resultp.append(spinService.spin_paragraph_en(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"]))
 
     for k1, k2 in zip(listp, resultp):
         k1["ptag"].replace_with(k2)
+        
     paper = str(paper)
     paper = paper.replace("&lt;", "<")
     paper = paper.replace("&gt;", ">")

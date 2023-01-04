@@ -20,7 +20,7 @@ users = MongoClient(CONNECTION_STRING_MGA1).accounts.data
 class SpinService:
 
     def __init__(self) -> None:
-        with open("new_dataspin.p", "rb") as file:
+        with open("dataspin.p", "rb") as file:
             self.dataspin = pickle.load(file)
         nltk.download('omw-1.4')
         nltk.download('wordnet')
@@ -61,29 +61,29 @@ class SpinService:
             print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
-        else:
-            try:
-                for i in p_paragraph:
-                    if not re.match(r'<[^>]+>', i):
-                        word_splits = word_splits + word_tokenize_vi(i)
-                    else:
-                        word_splits = word_splits.append(i)
-                        if re.match(r'<img [^>]+>', i):
-                            word_splits = word_splits.append("<br>")
 
-                if word_splits is not None:
-                    for index_word in range(len(word_splits)):
-                        if word_splits[index_word] in self.dataspin and word_splits[
-                            index_word].lower() not in keyword.lower():
-                            word_splits[index_word] = random.choice(self.dataspin[word_splits[index_word]])
-                    paragraph = " ".join(word_splits)
-                    paragraph = soup(paragraph, self.type_soup)
-
-                    return paragraph
+        try:
+            for i in p_paragraph:
+                if not re.match(r'<[^>]+>', i):
+                    word_splits = word_splits + word_tokenize_vi(i)
                 else:
-                    return p_paragraph1
-            except:
+                    word_splits = word_splits.append(i)
+                    if re.match(r'<img [^>]+>', i):
+                        word_splits = word_splits.append("<br>")
+
+            if word_splits is not None:
+                for index_word in range(len(word_splits)):
+                    if word_splits[index_word] in self.dataspin and word_splits[
+                        index_word].lower() not in keyword.lower():
+                        word_splits[index_word] = random.choice(self.dataspin[word_splits[index_word]])
+                paragraph = " ".join(word_splits)
+                paragraph = soup(paragraph, self.type_soup)
+
+                return paragraph
+            else:
                 return p_paragraph1
+        except:
+            return p_paragraph1
 
     def spin_paragraph_en(self, p_paragraph1, keyword, userId):
 

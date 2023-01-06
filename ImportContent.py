@@ -310,11 +310,12 @@ def process_content(article, url):
             resultp.append(spinService.spin_paragraph_en(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"]))
 
     for index in range(0, len(resultp)):
-        if 5 <= index <= len(resultp) - 5:
-            soup = BeautifulSoup(f"<blockquote>{str(resultp[index])}</blockquote>", 'html.parser')
+        if 3 == index:
+            soup = BeautifulSoup(f"open_blockquote{str(resultp[index])}", 'html.parser')
             resultp[index] = soup
-        elif len(resultp) < 11:
-            soup = BeautifulSoup(f"<blockquote>{str(resultp[index])}</blockquote>", 'html.parser')
+        
+        if index == len(resultp) - 3:
+            soup = BeautifulSoup(f"{str(resultp[index])}close_blockquote", 'html.parser')
             resultp[index] = soup
 
     for k1, k2 in zip(listp, resultp):
@@ -325,6 +326,8 @@ def process_content(article, url):
     paper = paper.replace("&gt;", ">")
     paper = paper.replace(" . ", ". ")
     paper = paper.replace(" , ", ", ")
+    paper = paper.replace("open_blockquote", "<blockquote>")
+    paper = paper.replace("close_blockquote", "</blockquote>")
     try:
         if url["web_info"]["Email_replace"] != '':
             match = re.findall(r'[\w\.-]+@[\w\.-]+', paper)

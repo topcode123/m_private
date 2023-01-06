@@ -313,6 +313,9 @@ def process_content(article, url):
         if 5 <= index <= len(resultp) - 5:
             soup = BeautifulSoup(f"<blockquote>{str(resultp[index])}</blockquote>", 'html.parser')
             resultp[index] = soup
+        elif len(resultp) < 11:
+            soup = BeautifulSoup(f"<blockquote>{str(resultp[index])}</blockquote>", 'html.parser')
+            resultp[index] = soup
 
     for k1, k2 in zip(listp, resultp):
         k1["ptag"].replace_with(k2)

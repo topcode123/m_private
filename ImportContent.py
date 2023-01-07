@@ -326,7 +326,7 @@ def process_content(article, url):
     paper = paper.replace("&gt;", ">")
     paper = paper.replace(" . ", ". ")
     paper = paper.replace(" , ", ", ")
-    paper = paper.replace("open_blockquote", "<blockquote>")
+    paper = paper.replace("open_blockquote", """<blockquote style="border: none !important;padding: 0 !important;text-align: justify !important;">""")
     paper = paper.replace("close_blockquote", "</blockquote>")
     try:
         if url["web_info"]["Email_replace"] != '':

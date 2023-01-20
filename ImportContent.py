@@ -59,6 +59,7 @@ config = Config()
 campaign_root = MongoClient(CONNECTION_STRING_MGA1).campaigns.data
 comment_queue = MongoClient(CONNECTION_STRING_MGA1).campaigns.comment_queue
 keywords = MongoClient(CONNECTION_STRING_MGA1).keywords
+pendingposts = MongoClient(CONNECTION_STRING_MGA1).campaigns.pendingposts
 
 contentExtractor = ContentExtractor(config)
 from bs4 import BeautifulSoup
@@ -305,9 +306,9 @@ def process_content(article, url):
     resultp = []
     for p_tag in listp:
         if p_tag["language"] == "vi":
-            resultp.append(spinService.spin_paragraph(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"]))
+            resultp.append(spinService.spin_paragraph(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"], url["campaign"]["isSmartContent"]))
         else:
-            resultp.append(spinService.spin_paragraph_en(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"]))
+            resultp.append(spinService.spin_paragraph_en(p_tag["ptag"], p_tag["keywords"], url["web_info"]["UserId"], url["campaign"]["isSmartContent"]))
 
     for index in range(0, len(resultp)):
         if 3 == index:
@@ -395,7 +396,7 @@ def restImgUL(website, user, password, urlimg, src_img):
             return None
 
 
-def importcontent(content):
+def importcontent(content, is_smart_content):
     # cl = await clientt.user["userdatabase"].find_one({'_id':ObjectId(content['UserId'])})
     cl = content['user']["web_info"]
     website = cl["WebsitePost"]
@@ -424,6 +425,14 @@ def importcontent(content):
         'featured_media': int(idthump),
         'slug': content['slug']
     }
+
+    if is_smart_content:
+        print("save to pending post")
+        post["website"] = website
+        post["campaign_id"] = str(content['user']["campaign"]["_id"])
+
+        pendingposts.inser_one(post)
+        return
 
     with requests.post(website, headers=header, json=post, verify=False) as response:
         res = response.status_code
@@ -464,6 +473,6 @@ def importcontent(content):
 
 def ImportContents(article, url):
     dataprocess = process_content(article, url)
-    import_content = importcontent(dataprocess)
+    import_content = importcontent(dataprocess, url["campaign"]["isSmartContent"])
 
     return import_content

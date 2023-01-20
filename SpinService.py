@@ -36,7 +36,7 @@ class SpinService:
             raise ValueError("Missing OPEN AI API KEY")
         openai.api_key = api_key.get("apiKey")
 
-        promt = "in a suspensful and mysterious style rewrite text below\n" + raw_data + ""
+        promt = "Rewrite paragraphs in expert style\n" + raw_data + ""
         if lang == "vi":
             promt = "viết lại đoạn văn sau bằng tiếng việt\n" + raw_data + ""
 
@@ -53,11 +53,11 @@ class SpinService:
         openai_response = response['choices']
         return openai_response[-1]['text']
 
-    def spin_paragraph(self, p_paragraph1, keyword, userId):
+    def spin_paragraph(self, p_paragraph1, keyword, userId, is_smart_content):
         p_paragraph = [str(t) for t in p_paragraph1.contents]
         word_splits = []
         print("keyword: ", keyword)
-        if userId == "615d1d3f570562748141c73e -------------":
+        if is_smart_content:
             print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "vi"), self.type_soup)
             return paragraph
@@ -85,10 +85,10 @@ class SpinService:
         except:
             return p_paragraph1
 
-    def spin_paragraph_en(self, p_paragraph1, keyword, userId):
+    def spin_paragraph_en(self, p_paragraph1, keyword, userId, is_smart_content):
 
         p_paragraph = [str(t) if not re.match(r'<[^>]+>', str(t)) else str(t) for t in p_paragraph1.contents]
-        if userId == "615d1d3f570562748141c73e ---------------":
+        if userId == is_smart_content:
             print("use open ai to process")
             paragraph = soup(self.rewrite_article_gpt3(str(p_paragraph1), "en"), self.type_soup)
             return paragraph

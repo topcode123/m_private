@@ -431,7 +431,7 @@ def importcontent(content, is_smart_content):
         post["website"] = website
         post["campaign_id"] = str(content['user']["campaign"]["_id"])
 
-        pendingposts.inser_one(post)
+        pendingposts.insert_one(post)
         return
 
     with requests.post(website, headers=header, json=post, verify=False) as response:

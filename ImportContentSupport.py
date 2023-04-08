@@ -288,7 +288,7 @@ def restImgUL(website,user,password,urlimg,src_img):
                     with requests.post(website,
                         data=image,
                         headers=headers,timeout=10) as response:
-                            res = response.json(encoding="utf-8")
+                            res = response.json()
                             newID= res.get('id')
                             return newID
         except Exception as e:

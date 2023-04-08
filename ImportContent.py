@@ -131,6 +131,7 @@ def process_content(article, url):
         #         pass
         # pre_link = i
         # i['style'] ="width:100%"
+        print(i)
         try:
             if i.has_attr("src"):
                 if i["src"] in src_img:
@@ -167,6 +168,7 @@ def process_content(article, url):
             print(e)
 
     thumb = None
+    print(f"src_img {src_img}")
     if len(src_img) > 0:
         try:
             for iii in range(5):

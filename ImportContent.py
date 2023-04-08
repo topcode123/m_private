@@ -89,6 +89,7 @@ def process_content(article, url):
     self_url = self_url.replace("\n", "")
     domain = urlparse(url["link"]).netloc
     img = soup.find_all("img")
+    print(f"length img: {len(img)}")
     src_img = []
     pre_link = None
     for i in img:

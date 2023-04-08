@@ -74,7 +74,7 @@ def ColabSimple():
 
                       try:
                         r = requests.get(a[0]["link"],verify=False,timeout=10,headers=headers).content
-                        r = r.decode()
+                        r = r.decode("utf-8")
                         soups = BeautifulSoup(r)
                         img = soups.find_all("img")
                         for i in img:

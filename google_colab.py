@@ -182,7 +182,7 @@ def ColabSimple():
         except Exception as e:
           traceback.print_exc()
           if "429" in str(e):
-            raise("too many")    
+            raise Exception("too many")    
 while True:
 
   while True:
